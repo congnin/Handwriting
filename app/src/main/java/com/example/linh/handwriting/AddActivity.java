@@ -1,6 +1,7 @@
 package com.example.linh.handwriting;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.renderscript.ScriptGroup;
@@ -10,6 +11,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -20,6 +22,11 @@ import com.example.linh.handwriting.utils.Person;
 import com.example.linh.handwriting.witget.Tabbar;
 import com.example.linh.handwriting.witget.WritePadView;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * Created by Linh on 3/10/2017.
  */
@@ -28,6 +35,7 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
         View.OnFocusChangeListener, Tabbar.TabbarDelegate {
     EditText nameTextView;
     EditText jobTextView;
+    EditText birthdayTextView;
     WritePadView writePadView;
     ImageView doneImageView;
     private static final int NAME_CHOOSED = 1;
@@ -38,6 +46,11 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
 
     public int inputMethod;
 
+    Calendar now;
+    int iMonth;
+    int iDay;
+    int iYear;
+
     private static final int TYPE_SOFT_KEY = 1;
     private static final int TYPE_HAND = 2;
     public int selectedInputType = TYPE_SOFT_KEY;
@@ -46,9 +59,20 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
         @Override
         public void onSingleClick(View v) {
             if (v.getId() == R.id.doneImage) {
-                if (!TextUtils.isEmpty(nameTextView.getText()) && !TextUtils.isEmpty(jobTextView.getText())) {
+                if (!TextUtils.isEmpty(nameTextView.getText()) && !TextUtils.isEmpty(birthdayTextView.getText())) {
                     sendToListUser(UserListActivity.REQUEST_ADD);
                 }
+            } else if (v.getId() == R.id.birthday_textview) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.DAY_OF_MONTH, 31);
+                calendar.set(Calendar.MONTH, 11);
+                calendar.set(Calendar.YEAR, now.get(Calendar.YEAR) - 17);
+                DatePickerDialog dpd;
+
+                dpd = new DatePickerDialog(AddActivity.this, myDateListener, iYear, iMonth, iDay);
+
+                dpd.getDatePicker().setMaxDate(calendar.getTimeInMillis());
+                dpd.show();
             }
         }
     };
@@ -59,6 +83,7 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
         setContentView(R.layout.activity_add);
         nameTextView = (EditText) findViewById(R.id.person_name_textview);
         jobTextView = (EditText) findViewById(R.id.job_textview);
+        birthdayTextView = (EditText) findViewById(R.id.birthday_textview);
         writePadView = (WritePadView) findViewById(R.id.padview);
         doneImageView = (ImageView) findViewById(R.id.doneImage);
         tabbar = (Tabbar) findViewById(R.id.tabbar);
@@ -70,9 +95,13 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
 
         nameTextView.setOnFocusChangeListener(this);
         jobTextView.setOnFocusChangeListener(this);
+        birthdayTextView.setOnClickListener(mySingleListener);
         doneImageView.setOnClickListener(mySingleListener);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        now = Calendar.getInstance();
+        iMonth = now.get(Calendar.MONTH);
+        iDay = now.get(Calendar.DAY_OF_MONTH);
+        iYear = now.get(Calendar.YEAR) - 17;
     }
 
 
@@ -176,5 +205,26 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
             selectedInputType = TYPE_HAND;
             setNoInputMethod();
         }
+    }
+
+    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
+        @Override
+        public void onDateSet(DatePicker datePicker, int year, int monthOfYear, int dayOfMonth) {
+            iDay = dayOfMonth;
+            iMonth = monthOfYear;
+            iYear = year;
+            String birthday;
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(year, monthOfYear, dayOfMonth);
+            birthday = formatDateTimeServer(calendar.getTime());
+
+            birthdayTextView.setText(birthday);
+        }
+    };
+
+    public String formatDateTimeServer(Date datetime) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-dd-MM", Locale.ENGLISH);
+        String strDateTime = formatter.format(datetime);
+        return strDateTime;
     }
 }

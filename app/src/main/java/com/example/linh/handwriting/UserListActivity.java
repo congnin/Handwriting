@@ -95,7 +95,10 @@ public class UserListActivity extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_ADD) {
-            if (data.getExtras() != null) {
+            if (data == null) {
+                return;
+            }
+            if (data.getExtras() != null && data.getExtras().containsKey("person")) {
                 Person person = data.getExtras().getParcelable("person");
                 adapter.add(person);
             }
