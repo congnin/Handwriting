@@ -12,8 +12,8 @@
         <activity android:name=".AddActivity">
 
         </activity>
-        <activity android:name=".MainActivity">
-        </activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainSettings"></activity>
         <activity android:name=".UserListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,6 +21,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name=".recoInterface.RecognizerService" />
     </application>
 

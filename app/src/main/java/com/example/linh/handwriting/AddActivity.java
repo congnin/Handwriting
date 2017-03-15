@@ -153,6 +153,25 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
         }
     }
 
+    @Override
+    public void showMenu() {
+        Intent intent = new Intent(this, MainSettings.class);
+        startActivity(intent);
+    }
+
+    @Override
+    public void setDot() {
+        switch (selected) {
+            case NAME_CHOOSED:
+                nameTextView.getText().insert(nameTextView.getSelectionStart(), ".");
+                break;
+
+            case JOB_CHOOSED:
+                jobTextView.getText().insert(jobTextView.getSelectionStart(), ".");
+                break;
+        }
+    }
+
     public void hideSoftKeyboard() {
         View view = getCurrentFocus();
         if (view != null) {
@@ -201,9 +220,11 @@ public class AddActivity extends AppCompatActivity implements WritePadView.Write
         if (index == Tabbar.TABBAR_LEFT) {
             selectedInputType = TYPE_SOFT_KEY;
             setInputMethod();
+            writePadView.setVisibility(View.GONE);
         } else if (index == Tabbar.TABBAR_RIGHT) {
             selectedInputType = TYPE_HAND;
             setNoInputMethod();
+            writePadView.setVisibility(View.VISIBLE);
         }
     }
 

@@ -60,13 +60,19 @@ public class WritePadView extends LinearLayout implements View.OnClickListener, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.showMenuButton:
-                ocrView.clickShowMenu();
+                //ocrView.clickShowMenu();
+                if(dele != null){
+                    dele.showMenu();
+                }
                 break;
             case R.id.dotButton:
-                ocrView.clickDo();
+                //ocrView.clickDo();
+                if(dele != null){
+                    dele.setDot();
+                }
                 break;
             case R.id.spaceButton:
-                ocrView.clickSpace();
+                //ocrView.clickSpace();
                 if(dele != null){
                     dele.setSpace();
                 }
@@ -75,7 +81,7 @@ public class WritePadView extends LinearLayout implements View.OnClickListener, 
                 ocrView.clickEnter();
                 break;
             case R.id.backspButton:
-                ocrView.clickBack();
+                //ocrView.clickBack();
                 if(dele != null){
                     dele.deleteCharacter();
                 }
@@ -102,6 +108,10 @@ public class WritePadView extends LinearLayout implements View.OnClickListener, 
         void deleteCharacter();
 
         void setSpace();
+
+        void showMenu();
+
+        void setDot();
     }
 
 }
